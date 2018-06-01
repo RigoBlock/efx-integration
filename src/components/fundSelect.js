@@ -5,6 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import PoweredMsg from './poweredMsg'
 
 class FundSelect extends Component {
 
@@ -46,6 +47,7 @@ class FundSelect extends Component {
           input={<Input name="fund" id="fund-select" />}
         >
           {this.renderSelectItems()}
+          <PoweredMsg style={{opacity: 0.7, marginRight: '5px'}}/>
         </Select>
       </FormControl>
     );

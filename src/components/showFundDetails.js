@@ -10,7 +10,11 @@ class ShowFundDetails extends Component {
   render() {
     const { fundSelected } = this.props
     return fundSelected.address === ''
-    ? 'Please select a fund'
+    ? (
+      <div className='create-fund'>
+        Please create a fund on <a href="https://beta.rigoblock.com" rel="noopener noreferrer" target="_blank">Rigoblock DApp</a>
+      </div>
+    )
     : (
       <div>
         <p>Name: {fundSelected.details.name}</p>

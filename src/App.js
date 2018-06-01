@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import FundSelect from './components/fundSelect'
 import ShowFundDetails from './components/showFundDetails'
+import ManagerAddressInput from './components/managerAddressInput'
+import PoweredMsg from './components/poweredMsg'
+import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
 import Web3 from 'web3';
 import * as abis from './abi/index'
 import {
@@ -22,7 +26,9 @@ class App extends Component {
     fundSelected: {
       address: ''
     },
-    managerAddress: '0xc8DCd42e846466F2D2b89F3c54EBa37bf738019B'
+    managerAddress: '0xc8DCd42e846466F2D2b89F3c54EBa37bf738019B',
+    errorAddress: '',
+    fundSelectEnabled: true
   };
 
   componentDidMount = () => {
@@ -40,7 +46,7 @@ class App extends Component {
 
   connectMM = () => {
     if (typeof window.web3 !== 'undefined') {
-      const web3 = new Web3(window.web3.currentProvider);
+      const web3 = new Web3(window.web3.currentProvider)
       return web3.eth.getAccounts()
         .then(accounts => {
           return accounts
@@ -147,16 +153,51 @@ class App extends Component {
     });
   }
 
+  onChangeManagerAddress = (managerAddress) => {
+    const web3 = new Web3(window.web3.currentProvider)
+    if (web3.utils.isAddress(managerAddress)) {
+      this.setState({
+        errorAddress: ''
+      }, this.initSelect)
+    } else {
+      this.setState({
+        fundsListDisabled: true,
+        fundSelected: {
+          address: ''
+        },
+        errorAddress:'Invalid address'
+      })
+    }
+    this.setState({
+      managerAddress
+    });
+
+  }
+
   render() {
-    const { fundsList, fundsListDisabled, isMMUnlocked, fundSelected } = this.state
+    const { fundsList, 
+      fundsListDisabled, 
+      isMMUnlocked, 
+      fundSelected,
+      managerAddress,
+      errorAddress,
+     } = this.state
 
     return (
       <div className="App">
-        <Typography variant="title" gutterBottom>
+      <Paper className='paper-container' elevation={4}>
+        <Typography variant="display1" gutterBottom>
           Fund select
         </Typography>
+        <Divider />
         <div className='App-container'>
-          <Grid container spacing={24}>
+          <Grid item xs={12}>
+            <Grid item xs={12}>
+              <ManagerAddressInput
+              error={errorAddress}
+              managerAddress={managerAddress.toLowerCase()}
+              onChangeManagerAddress={this.onChangeManagerAddress}/>
+            </Grid>
             <Grid item xs={12}>
               {isMMUnlocked ? null : <p>Please unlock MetaMask.</p>}
               <FundSelect
@@ -166,11 +207,13 @@ class App extends Component {
                 fundSelected={fundSelected}
               />
             </Grid>
+            <PoweredMsg />
             <Grid item xs={12}>
               <ShowFundDetails fundSelected={fundSelected} />
             </Grid>
           </Grid>
         </div>
+        </Paper>
       </div>
     );
   }
