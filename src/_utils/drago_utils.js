@@ -243,7 +243,6 @@ export const getWrapperBalance = async (wrapperAddress, dragoAddress, web3) => {
 }
 
 export const getTokenBalance = async (tokenAddress, dragoAddress, web3) => {
-  console.log(tokenAddress, dragoAddress)
   if (tokenAddress === '0x0') {
     return await new web3.eth.getBalance(dragoAddress)
   }
