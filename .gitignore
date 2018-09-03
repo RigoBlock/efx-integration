@@ -45,4 +45,6 @@ yarn-debug.log*
 yarn-error.log*
 
 .vscode/*
+.vscode/
+.vscode
 efx-integration.code-workspace
