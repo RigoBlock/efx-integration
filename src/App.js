@@ -49,7 +49,7 @@ class App extends Component {
   componentDidMount = async () => {
     try {
       const accounts = await this.connectMM()
-      await this.setState(
+      this.setState(
         {
           isMMUnlocked: accounts.length !== 0 ? true : false,
           account: accounts[0],
@@ -64,11 +64,20 @@ class App extends Component {
       })
     }
     let that = this
-    let timerId = setTimeout(async function tick() {
+    setTimeout(async function checkBalance() {
       const { tokenSelected, fundSelected } = that.state
+      const accounts = await that.connectMM()
+      that.setState(
+        {
+          isMMUnlocked: accounts.length !== 0 ? true : false,
+          account: accounts[0],
+          managerAddress: accounts[0]
+        },
+        this.initSelect
+      )
       await that.updateBalances(tokenSelected, fundSelected)
-      timerId = setTimeout(tick, 2000) // (*)
-    }, 2000)
+      setTimeout(checkBalance, 1000)
+    }, 1000)
   }
 
   connectMM = async () => {
@@ -91,16 +100,14 @@ class App extends Component {
   }
 
   initSelect = async () => {
-    const { account, managerAddress, web3, networkId } = this.state
+    const { managerAddress, networkId } = this.state
     const fundsAddresses = await Drago.getFundsAddresses(
-      account,
       managerAddress,
-      web3,
       networkId
     )
     const fundsList = await Promise.all(
       fundsAddresses.map(fundAddress => {
-        return Drago.getFundDetails(fundAddress, account, networkId)
+        return Drago.getFundDetails(fundAddress, networkId)
       })
     )
     this.setState({
@@ -180,6 +187,19 @@ class App extends Component {
       errorMsg,
       networkId
     } = this.state
+
+    if (!isMMUnlocked) {
+      return (
+        <Paper className="paper-container" elevation={4}>
+          <Grid item xs={12}>
+            <div style={{ color: orange[500], fontWeight: 700 }}>
+              {errorMsg}
+              {isMMUnlocked ? null : <p>Please unlock MetaMask.</p>}
+            </div>
+          </Grid>
+        </Paper>
+      )
+    }
 
     return (
       <div className="App">

@@ -36,7 +36,17 @@ export function toBaseUnitAmount(amount, decimals) {
   }
   return baseUnitAmount
 }
-
+/**
+ * Requests are proxied through the fund smart contract. The exchange has to be approved.
+ *
+ * @param {*} managerAccountAddress   The address of the owner of the fund
+ * @param {*} dragoAddress            The address of the fund.
+ * @param {*} exchangeContractAddress The address of the exchange (Ethfinex for example)
+ * @param {*} tokenAddress            The address of the token to be un-locked.
+ * @param {*} tokenWrapper            The address of the token wrapper.
+ * @param {*} toBeUnwrapped           The amount in base units to be unwrapped. A baseUnit is defined as the smallest denomination of a token.
+ * @returns                           A promise resolving the smart contract method called.
+ */
 export const operateOnExchangeEFXUnlock = async (
   managerAccountAddress,
   dragoAddress,
@@ -137,7 +147,19 @@ export const operateOnExchangeEFXUnlock = async (
         .send(options)
     })
 }
-
+/**
+ *  Requests are proxied through the fund smart contract. The exchange has to be approved.
+ *
+ * @param {*} managerAccountAddress     The address of the owner of the fund
+ * @param {*} dragoAddress              The address of the fund.
+ * @param {*} exchangeContractAddress   The address of the exchange (Ethfinex for example)
+ * @param {*} tokenAddress              The address of the token to be un-locked.
+ * @param {*} tokenWrapper              The address of the token wrapper.
+ * @param {*} toBeWrapped               The amount in base units to be unwrapped. A baseUnit is defined as the smallest denomination of a token.
+ * @param {*} time                      Lock time (1 for 1h)
+ * @param {*} isOldERC20                True for non standard ERC20 tokens su as USDT.
+ * @returns                             A promise resolving the smart contract method called.
+ */
 export const operateOnExchangeEFXLock = async (
   managerAccountAddress,
   dragoAddress,
@@ -249,18 +271,24 @@ export const getTokenBalance = async (tokenAddress, dragoAddress, web3) => {
   const tokenContract = new web3.eth.Contract(abis.erc20, tokenAddress)
   return await tokenContract.methods.balanceOf(dragoAddress).call()
 }
-
-export const getFundsAddresses = (account, managerAddress, web3, networkId) => {
+/**
+ * Returns a array of funds belonging to a specific address
+ *
+ *
+ * @param {*} managerAddress  The address of the owner of the fund
+ * @param {*} networkId       Ethereum netword id
+ * @returns                   Promise resolving an array of fund addresses
+ */
+export const getFundsAddresses = (managerAddress, networkId) => {
+  const web3 = new Web3(window.web3.currentProvider)
   const contract = new web3.eth.Contract(
     abis.dragofactory,
     CONST.contracts[networkId].dragoFactory
   )
-  let options = {
-    from: account
-  }
+  let options = {}
   return contract.methods
     .getDragosByAddress(managerAddress)
-    .estimateGas(options)
+    .estimateGas()
     .then(gasEstimate => {
       options.gas = gasEstimate
     })
@@ -271,19 +299,33 @@ export const getFundsAddresses = (account, managerAddress, web3, networkId) => {
       console.warn(err)
     })
 }
-
-export const getFundDetails = (fundAddress, account, networkId) => {
+/**
+ *  Calls the followng method on the fund smart contract:
+ *     function fromAddress(address _drago)
+ *       external view
+ *      returns (
+ *           uint256 id,
+ *           string name,
+ *           string symbol,
+ *           uint256 dragoId,
+ *           address owner,
+ *           address group
+ *         )
+ *
+ * @param {*} fundAddress The address of the owner of the fund
+ * @param {*} networkId   Ethereum netword id
+ * @returns               Array of fund data.
+ */
+export const getFundDetails = (fundAddress, networkId) => {
   const web3 = new Web3(window.web3.currentProvider)
   const contract = new web3.eth.Contract(
     abis.dragoregistry,
     CONST.contracts[networkId].dragoRegistry
   )
-  let options = {
-    from: account
-  }
+  let options = {}
   return contract.methods
     .fromAddress(fundAddress)
-    .estimateGas(options)
+    .estimateGas()
     .then(gasEstimate => {
       options.gas = gasEstimate
     })
