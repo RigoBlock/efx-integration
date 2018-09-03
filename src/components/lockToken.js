@@ -84,7 +84,7 @@ class LockToken extends Component {
               onChange={this.onChangeAmount}
               fullWidth
               margin="normal"
-              value={amountToLock.amountToLock}
+              value={amountToLock}
             />
             <FormHelperText>{errorMsg.amountToLock}</FormHelperText>
           </Grid>
