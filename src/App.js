@@ -1,23 +1,22 @@
-import React, { Component } from 'react';
-import Typography from '@material-ui/core/Typography';
+import './App.css'
+import * as CONST from './_utils/const'
+import * as Drago from './_utils/drago_utils'
+import Divider from '@material-ui/core/Divider'
 import FundSelect from './components/fundSelect'
-import ShowFundDetails from './components/showFundDetails'
+import Grid from '@material-ui/core/Grid'
+import LockUnlockActions from './components/lockUnlockActions'
 import ManagerAddressInput from './components/managerAddressInput'
+import Paper from '@material-ui/core/Paper'
 import PoweredMsg from './components/poweredMsg'
-import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
-import Web3 from 'web3';
-import * as abis from './abi/index'
-import {
-  DRAGO_FACTORY_KOVAN_ADDRESS,
-  DRAGO_REGISTRY_KOVAN_ADDRESS
-} from './_utils/const'
-import Grid from '@material-ui/core/Grid';
-import './App.css';
-
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import ShowFundDetails from './components/showFundDetails'
+import TokenSelect from './components/tokenSelect'
+import Typography from '@material-ui/core/Typography'
+import Web3 from 'web3'
+import orange from '@material-ui/core/colors/orange'
 
 class App extends Component {
-
   state = {
     isMMUnlocked: false,
     account: '',
@@ -26,43 +25,83 @@ class App extends Component {
     fundSelected: {
       address: ''
     },
-    managerAddress: '0xc8DCd42e846466F2D2b89F3c54EBa37bf738019B',
+    tokenList: CONST.tokens,
+    tokenSelected: CONST.tokens[3].GRG,
+    // managerAddress: '0xc8DCd42e846466F2D2b89F3c54EBa37bf738019B'.toLowerCase(),
+    managerAddress: '',
     errorAddress: '',
-    fundSelectEnabled: true
-  };
-
-  componentDidMount = () => {
-    this.connectMM()
-      .then(accounts => {
-        this.setState({
-          isMMUnlocked: accounts.length !== 0 ? true : false,
-          account: accounts[0]
-        }, this.initSelect)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    errorMsg: '',
+    fundSelectEnabled: true,
+    networkId: 3,
+    web3: {}
   }
 
-  connectMM = () => {
+  static childContextTypes = {
+    web3: PropTypes.object
+  }
+
+  getChildContext() {
+    return {
+      web3: this.state.web3
+    }
+  }
+
+  componentDidMount = async () => {
+    try {
+      const accounts = await this.connectMM()
+      await this.setState(
+        {
+          isMMUnlocked: accounts.length !== 0 ? true : false,
+          account: accounts[0],
+          managerAddress: accounts[0]
+        },
+        this.initSelect
+      )
+    } catch (err) {
+      console.warn(err)
+      this.setState({
+        errorMsg: 'Cannot connect to Metamask'
+      })
+    }
+    let that = this
+    let timerId = setTimeout(async function tick() {
+      const { tokenSelected, fundSelected } = that.state
+      await that.updateBalances(tokenSelected, fundSelected)
+      timerId = setTimeout(tick, 2000) // (*)
+    }, 2000)
+  }
+
+  connectMM = async () => {
     if (typeof window.web3 !== 'undefined') {
       const web3 = new Web3(window.web3.currentProvider)
-      return web3.eth.getAccounts()
-        .then(accounts => {
-          return accounts
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      let networkId = await web3.eth.net.getId()
+      let errorMsg = networkId !== 3 ? 'Please connect to ropsten' : ''
+
+      this.setState({
+        web3,
+        errorMsg,
+        networkId
+      })
+      return await web3.eth.getAccounts()
+    } else {
+      this.setState({
+        errorMsg: 'Cannot connect to Metamask'
+      })
     }
   }
 
   initSelect = async () => {
-    const fundsAddresses = await this.getFundsAddresses()
+    const { account, managerAddress, web3, networkId } = this.state
+    const fundsAddresses = await Drago.getFundsAddresses(
+      account,
+      managerAddress,
+      web3,
+      networkId
+    )
     const fundsList = await Promise.all(
-      fundsAddresses.map(((fundAddress) => {
-        return this.getFundDetails(fundAddress)
-      }))
+      fundsAddresses.map(fundAddress => {
+        return Drago.getFundDetails(fundAddress, account, networkId)
+      })
     )
     this.setState({
       fundsList,
@@ -70,153 +109,132 @@ class App extends Component {
     })
   }
 
-  //  CONTRACT FUNCTION
-  //
-  //  function getDragosByAddress(address _owner)
-  //  external
-  //  view
-  //  returns (address[])
-  //  {
-  //  }
-
-  getFundsAddresses = () => {
-    const { account, managerAddress } = this.state
-    const web3 = new Web3(window.web3.currentProvider);
-    const contract = new web3.eth.Contract(abis.dragofactory, DRAGO_FACTORY_KOVAN_ADDRESS)
-    var options = {
-      from: account,
-    }
-    return contract.methods.getDragosByAddress(managerAddress)
-      .estimateGas(options)
-      .then(gasEstimate => {
-        options.gas = gasEstimate
-      }
-      )
-      .then(() => {
-        return contract.methods.getDragosByAddress(managerAddress).call(options)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+  updateBalances = async (token, fundSelected) => {
+    const { web3 } = this.state
+    token.wrappedBalance = await Drago.getWrapperBalance(
+      token.wrappers.Ethfinex.address,
+      fundSelected.address,
+      web3
+    )
+    token.availableBalance = await Drago.getTokenBalance(
+      token.address,
+      fundSelected.address,
+      web3
+    )
+    this.setState({
+      tokenSelected: token
+    })
   }
 
-
-  //   CONTRACT FUNCTION
-  //
-  //   function fromAddress(address _drago)
-  //   external view
-  //   returns (
-  //       uint id,
-  //       string name,
-  //       string symbol,
-  //       uint dragoId,
-  //       address owner,
-  //       address group
-  //   )
-  //  {
-  //  }
-
-  getFundDetails = (fundAddress) => {
-    const { account } = this.state
-    const web3 = new Web3(window.web3.currentProvider);
-    const contract = new web3.eth.Contract(abis.dragoregistry, DRAGO_REGISTRY_KOVAN_ADDRESS)
-    var options = {
-      from: account,
-    }
-    return contract.methods.fromAddress(fundAddress)
-      .estimateGas(options)
-      .then(gasEstimate => {
-        options.gas = gasEstimate
-      }
-      )
-      .then(() => {
-        return contract.methods.fromAddress(fundAddress).call(options)
-      })
-      .then((details) => {
-        return {
-          address: fundAddress,
-          details
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-  onFundSelect = (event) => {
-    const { fundsList } = this.state
-    const fundSelected = fundsList.find((fund) => {
+  onFundSelect = async event => {
+    const { fundsList, tokenSelected } = this.state
+    const fundSelected = fundsList.find(fund => {
       return fund.address === event.target.value
-    });
+    })
+    this.updateBalances({ ...tokenSelected }, fundSelected)
     this.setState({
       fundSelected
-    });
+    })
   }
 
-  onChangeManagerAddress = (managerAddress) => {
+  onTokenSelect = event => {
+    const { networkId, fundSelected } = this.state
+    const tokenSelected = Object.values(CONST.tokens[networkId]).find(token => {
+      return token.symbol === event.target.value
+    })
+    this.updateBalances({ ...tokenSelected }, fundSelected)
+  }
+
+  onChangeManagerAddress = managerAddress => {
     const web3 = new Web3(window.web3.currentProvider)
     if (web3.utils.isAddress(managerAddress)) {
-      this.setState({
-        errorAddress: ''
-      }, this.initSelect)
+      this.setState(
+        {
+          errorAddress: ''
+        },
+        this.initSelect
+      )
     } else {
       this.setState({
         fundsListDisabled: true,
         fundSelected: {
           address: ''
         },
-        errorAddress:'Invalid address'
+        errorAddress: 'Invalid address'
       })
     }
     this.setState({
       managerAddress
-    });
-
+    })
   }
 
   render() {
-    const { fundsList, 
-      fundsListDisabled, 
-      isMMUnlocked, 
+    const {
+      fundsList,
+      fundsListDisabled,
+      isMMUnlocked,
       fundSelected,
+      tokenSelected,
       managerAddress,
       errorAddress,
-     } = this.state
+      errorMsg,
+      networkId
+    } = this.state
 
     return (
       <div className="App">
-      <Paper className='paper-container' elevation={4}>
-        <Typography variant="display1" gutterBottom>
-          Fund select
-        </Typography>
-        <Divider />
-        <div className='App-container'>
+        <Paper className="paper-container" elevation={4}>
           <Grid item xs={12}>
-            <Grid item xs={12}>
-              <ManagerAddressInput
-              error={errorAddress}
-              managerAddress={managerAddress.toLowerCase()}
-              onChangeManagerAddress={this.onChangeManagerAddress}/>
-            </Grid>
-            <Grid item xs={12}>
+            <div style={{ color: orange[500], fontWeight: 700 }}>
+              {errorMsg}
               {isMMUnlocked ? null : <p>Please unlock MetaMask.</p>}
-              <FundSelect
-                fundsList={fundsList}
-                disabled={fundsListDisabled}
-                onFundSelect={this.onFundSelect}
-                fundSelected={fundSelected}
-              />
-            </Grid>
-            <PoweredMsg />
-            <Grid item xs={12}>
-              <ShowFundDetails fundSelected={fundSelected} />
-            </Grid>
+            </div>
           </Grid>
-        </div>
+          <Typography variant="display1" gutterBottom>
+            Fund select
+          </Typography>
+          <Divider />
+          <div className="app-container">
+            <Grid item xs={12}>
+              <Grid item xs={12}>
+                <ManagerAddressInput
+                  error={errorAddress}
+                  managerAddress={managerAddress.toLowerCase()}
+                  onChangeManagerAddress={this.onChangeManagerAddress}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FundSelect
+                  fundsList={fundsList}
+                  disabled={fundsListDisabled}
+                  onFundSelect={this.onFundSelect}
+                  fundSelected={fundSelected}
+                />
+              </Grid>
+              <PoweredMsg />
+              <Grid item xs={12}>
+                <ShowFundDetails fundSelected={fundSelected} />
+              </Grid>
+              <Grid item xs={12}>
+                <TokenSelect
+                  tokensList={Object.values(CONST.tokens[networkId])}
+                  onTokenSelect={this.onTokenSelect}
+                  tokenSelected={tokenSelected}
+                  disabled={fundSelected.address === ''}
+                />
+                <LockUnlockActions
+                  token={tokenSelected}
+                  fund={fundSelected}
+                  managerAddress={managerAddress}
+                  updateBalances={this.updateBalances}
+                />
+              </Grid>
+            </Grid>
+          </div>
         </Paper>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

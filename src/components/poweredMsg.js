@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 
 class PoweredMsg extends Component {
-
   static propTypes = {
-    style: PropTypes.object,
-  };
+    style: PropTypes.object
+  }
 
   static defaultProps = {
     style: {}
@@ -13,11 +12,18 @@ class PoweredMsg extends Component {
 
   render() {
     return (
-      <div className='powered-link' style={this.props.style}>
-        Powered by <a href="https://rigoblock.com/" rel="noopener noreferrer" target="_blank">Rigoblock</a>
+      <div className="powered-link" style={this.props.style}>
+        Powered by{' '}
+        <a
+          href="https://rigoblock.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Rigoblock
+        </a>
       </div>
-    );
+    )
   }
 }
 
-export default PoweredMsg;
+export default PoweredMsg
