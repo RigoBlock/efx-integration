@@ -13,7 +13,7 @@ class LockToken extends Component {
     amountToLock: PropTypes.string.isRequired,
     amountToUnlock: PropTypes.string.isRequired,
     onChangeAmount: PropTypes.func.isRequired,
-    disabled: PropTypes.bool,
+    disabled: PropTypes.bool.isRequired,
     errorMsg: PropTypes.object.isRequired,
     tokenLock: PropTypes.func.isRequired,
     tokenUnLock: PropTypes.func.isRequired
