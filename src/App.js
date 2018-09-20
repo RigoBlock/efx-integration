@@ -25,7 +25,6 @@ class App extends Component {
     fundSelected: {
       address: ''
     },
-    tokenList: CONST.tokens,
     tokenSelected: CONST.tokens[3].GRG,
     // managerAddress: '0xc8DCd42e846466F2D2b89F3c54EBa37bf738019B'.toLowerCase(),
     managerAddress: '',

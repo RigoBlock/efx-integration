@@ -18,8 +18,7 @@ class LockUnlockActions extends Component {
   static propTypes = {
     token: PropTypes.object.isRequired,
     fund: PropTypes.object,
-    managerAddress: PropTypes.string.isRequired,
-    updateBalances: PropTypes.func.isRequired
+    managerAddress: PropTypes.string.isRequired
   }
 
   static defaultProps = {
@@ -61,7 +60,6 @@ class LockUnlockActions extends Component {
       token.wrappers.Ethfinex.address,
       Drago.toBaseUnitAmount(new BigNumber(amountToUnlock), token.decimals)
     )
-    // this.props.updateBalances(token, fund)
   }
 
   tokenLock = async () => {
@@ -77,7 +75,6 @@ class LockUnlockActions extends Component {
       1,
       token.isOldERC20
     )
-    // this.props.updateBalances(token, fund)
   }
 
   onChangeAmount = async (newAmount, amountType) => {
