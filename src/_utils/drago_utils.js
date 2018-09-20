@@ -260,6 +260,7 @@ export const operateOnExchangeEFXLock = async (
 }
 
 export const getWrapperBalance = async (wrapperAddress, dragoAddress, web3) => {
+  console.log(wrapperAddress, dragoAddress, web3)
   const wrapperContract = new web3.eth.Contract(abis.wrapper, wrapperAddress)
   return await wrapperContract.methods.balanceOf(dragoAddress).call()
 }

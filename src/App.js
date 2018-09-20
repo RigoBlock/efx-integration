@@ -47,36 +47,30 @@ class App extends Component {
 
   componentDidMount = async () => {
     try {
-      const accounts = await this.connectMM()
-      this.setState(
-        {
-          isMMUnlocked: accounts.length !== 0 ? true : false,
-          account: accounts[0],
-          managerAddress: accounts[0]
-        },
-        this.initSelect
-      )
+        let that = this
+        setTimeout(async function checkBalance() {
+          const { tokenSelected, fundSelected } = that.state
+          const accounts = await that.connectMM()
+          that.setState(
+            {
+              isMMUnlocked: accounts.length !== 0 ? true : false,
+              account: accounts[0],
+              managerAddress: accounts[0]
+            },
+            that.initSelect
+          )
+          if (tokenSelected && fundSelected.address) {
+            await that.updateBalances(tokenSelected, fundSelected)
+          } 
+          setTimeout(checkBalance, 1000)
+        }, 1000)
+
     } catch (err) {
       console.warn(err)
       this.setState({
         errorMsg: 'Cannot connect to Metamask'
       })
     }
-    let that = this
-    setTimeout(async function checkBalance() {
-      const { tokenSelected, fundSelected } = that.state
-      const accounts = await that.connectMM()
-      that.setState(
-        {
-          isMMUnlocked: accounts.length !== 0 ? true : false,
-          account: accounts[0],
-          managerAddress: accounts[0]
-        },
-        this.initSelect
-      )
-      await that.updateBalances(tokenSelected, fundSelected)
-      setTimeout(checkBalance, 1000)
-    }, 1000)
   }
 
   connectMM = async () => {
