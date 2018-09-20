@@ -47,23 +47,35 @@ class App extends Component {
 
   componentDidMount = async () => {
     try {
-        let that = this
-        setTimeout(async function checkBalance() {
-          const { tokenSelected, fundSelected } = that.state
-          const accounts = await that.connectMM()
+      let that = this
+      setTimeout(async function checkBalance() {
+        const { tokenSelected, fundSelected } = that.state
+        const accounts = await that.connectMM()
+        accounts.length !== 0 ?
           that.setState(
             {
-              isMMUnlocked: accounts.length !== 0 ? true : false,
+              isMMUnlocked: true,
               account: accounts[0],
               managerAddress: accounts[0]
             },
             that.initSelect
+          ) :
+          that.setState(
+            {
+              isMMUnlocked: false,
+              account: '',
+              managerAddress: '',
+              fundsList: [],
+              fundSelected: {
+                address: ''
+              },
+            }
           )
-          if (tokenSelected && fundSelected.address) {
-            await that.updateBalances(tokenSelected, fundSelected)
-          } 
-          setTimeout(checkBalance, 1000)
-        }, 1000)
+        if (tokenSelected && fundSelected.address) {
+          await that.updateBalances(tokenSelected, fundSelected)
+        }
+        setTimeout(checkBalance, 1000)
+      }, 1000)
 
     } catch (err) {
       console.warn(err)

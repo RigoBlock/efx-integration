@@ -127,7 +127,7 @@ export const operateOnExchangeEFXUnlock = async (
   const encodedABI = await web3.eth.abi.encodeFunctionCall(contractMethod, [
     tokenAddress,
     tokenWrapper,
-    toBeUnwrapped,
+    toBeUnwrapped.toString(),
     v,
     r,
     s,
@@ -238,9 +238,10 @@ export const operateOnExchangeEFXLock = async (
     ]
   }
   const encodedABI = await web3.eth.abi.encodeFunctionCall(contractMethod, [
+    // '0x0000000000000000000000000000000000000000',
     tokenAddress,
     tokenWrapper,
-    toBeWrapped,
+    toBeWrapped.toString(),
     time,
     isOldERC20
   ])
@@ -260,7 +261,6 @@ export const operateOnExchangeEFXLock = async (
 }
 
 export const getWrapperBalance = async (wrapperAddress, dragoAddress, web3) => {
-  console.log(wrapperAddress, dragoAddress, web3)
   const wrapperContract = new web3.eth.Contract(abis.wrapper, wrapperAddress)
   return await wrapperContract.methods.balanceOf(dragoAddress).call()
 }
