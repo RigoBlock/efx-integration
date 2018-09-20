@@ -84,7 +84,7 @@ export const operateOnExchangeEFXUnlock = async (
   }
 
   if (tokenAddress === '0x0') {
-    tokenAddress = null
+    tokenAddress = '0x0000000000000000000000000000000000000000'
   }
   const contractMethod = {
     name: 'unwrap',
@@ -195,7 +195,7 @@ export const operateOnExchangeEFXLock = async (
     throw new Error('isOldERC20 need to be provided')
   }
   if (tokenAddress === '0x0') {
-    tokenAddress = null
+    tokenAddress = '0x0000000000000000000000000000000000000000'
   }
   console.log(`managerAccountAddress ${managerAccountAddress}`)
   console.log(`dragoAddress ${dragoAddress}`)
@@ -238,7 +238,6 @@ export const operateOnExchangeEFXLock = async (
     ]
   }
   const encodedABI = await web3.eth.abi.encodeFunctionCall(contractMethod, [
-    // '0x0000000000000000000000000000000000000000',
     tokenAddress,
     tokenWrapper,
     toBeWrapped.toString(),
