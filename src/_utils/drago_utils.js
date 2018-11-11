@@ -135,7 +135,8 @@ export const operateOnExchangeEFXUnlock = async (
   ])
   console.log(encodedABI)
   return contract.methods
-    .operateOnExchange(exchangeContractAddress, encodedABI)
+    //.operateOnExchange(exchangeContractAddress, encodedABI)
+    .operateOnExchange(exchangeContractAddress, [encodedABI])
     .estimateGas(options)
     .then(gasEstimate => {
       console.log(gasEstimate)
@@ -143,7 +144,8 @@ export const operateOnExchangeEFXUnlock = async (
     })
     .then(() => {
       return contract.methods
-        .operateOnExchange(exchangeContractAddress, encodedABI)
+        //.operateOnExchange(exchangeContractAddress, encodedABI)
+        .operateOnExchange(exchangeContractAddress, [encodedABI])
         .send(options)
     })
 }
@@ -244,7 +246,9 @@ export const operateOnExchangeEFXLock = async (
     time,
     isOldERC20
   ])
-  console.log(encodedABI)
+  const encodedTransaction = (exchangeContractAddress, [encodedABI])
+  console.log(encodedTransaction)
+  //console.log(encodedABI)
   return contract.methods
     //.operateOnExchange(exchangeContractAddress, encodedABI)
     .operateOnExchange(exchangeContractAddress, [encodedABI])
