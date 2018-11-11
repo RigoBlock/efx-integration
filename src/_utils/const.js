@@ -4,11 +4,11 @@ export const DRAGO_REGISTRY_KOVAN_ADDRESS =
   '0x80673d1201c5e61e1efdd4e06bef015d1293ccee'
 
 export const DRAGO_FACTORY_ROPSTEN_ADDRESS =
-  '0x8c35a5daf283e9ece4c968899eed028859645a8f'
+  '0xe4c028a19dea70fb15d7d56c6e5779e363f685d0'
 export const DRAGO_REGISTRY_ROPSTEN_ADDRESS =
-  '0x82f137b817ab61cdb2af5f23d5b96094b5fe5f7d'
+  '0x4e868d1ddf940316964ea7673e21be6cbed8b30b'
 
-export const EFX_EXCHANGE_ADDRESS = '0x67799a5e640bc64ca24d3e6813842754e546d7b1'
+export const EFX_EXCHANGE_ADDRESS = '0x1d8643aae25841322ecde826862a9fa922770981'
 
 export const contracts = {
   3: {
@@ -54,7 +54,7 @@ export const tokens = {
         Ethfinex: {
           symbol: 'ETHW',
           decimals: 18,
-          address: '0x965808e7F815CfffD4c018ef2Ba4C5A65EBa087e',
+          address: '0x06da2eb72279c1cec53c251bbff4a06fbfb93a5b',
           name: 'ETH Wrapper'
         }
       }
@@ -72,7 +72,7 @@ export const tokens = {
         Ethfinex: {
           symbol: 'USDTW',
           decimals: 6,
-          address: '0x83E42e6d1ac009285376340ef64BaC1C7d106C89',
+          address: '0x84442a4518126ed25a548fe3392f6021e3ccd5bb',
           name: 'USDT Wrapper'
         }
       }
@@ -90,7 +90,7 @@ export const tokens = {
         Ethfinex: {
           symbol: 'GRGW',
           decimals: 18,
-          address: '0x5959f2036608d693B4d085020ACAdBBf664C793E',
+          address: '0xacfb4c79259e3c2c1bf054f136e6d75f7cc2b07e',
           name: 'GRG Wrapper'
         }
       }

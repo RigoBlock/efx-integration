@@ -246,7 +246,8 @@ export const operateOnExchangeEFXLock = async (
   ])
   console.log(encodedABI)
   return contract.methods
-    .operateOnExchange(exchangeContractAddress, encodedABI)
+    //.operateOnExchange(exchangeContractAddress, encodedABI)
+    .operateOnExchange(exchangeContractAddress, [encodedABI])
     .estimateGas(options)
     .then(gasEstimate => {
       console.log(gasEstimate)
@@ -254,7 +255,8 @@ export const operateOnExchangeEFXLock = async (
     })
     .then(() => {
       return contract.methods
-        .operateOnExchange(exchangeContractAddress, encodedABI)
+        //.operateOnExchange(exchangeContractAddress, encodedABI)
+        .operateOnExchange(exchangeContractAddress, [encodedABI])
         .send(options)
     })
 }
