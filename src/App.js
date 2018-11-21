@@ -51,32 +51,29 @@ class App extends Component {
       setTimeout(async function checkBalance() {
         const { tokenSelected, fundSelected } = that.state
         const accounts = await that.connectMM()
-        accounts.length !== 0 ?
-          that.setState(
-            {
-              isMMUnlocked: true,
-              account: accounts[0],
-              managerAddress: accounts[0]
-            },
-            that.initSelect
-          ) :
-          that.setState(
-            {
+        accounts.length !== 0
+          ? that.setState(
+              {
+                isMMUnlocked: true,
+                account: accounts[0],
+                managerAddress: accounts[0]
+              },
+              that.initSelect
+            )
+          : that.setState({
               isMMUnlocked: false,
               account: '',
               managerAddress: '',
               fundsList: [],
               fundSelected: {
                 address: ''
-              },
-            }
-          )
+              }
+            })
         if (tokenSelected && fundSelected.address) {
           await that.updateBalances(tokenSelected, fundSelected)
         }
         setTimeout(checkBalance, 1000)
       }, 1000)
-
     } catch (err) {
       console.warn(err)
       this.setState({
@@ -110,11 +107,15 @@ class App extends Component {
       managerAddress,
       networkId
     )
-    const fundsList = await Promise.all(
-      fundsAddresses.map(fundAddress => {
-        return Drago.getFundDetails(fundAddress, networkId)
-      })
-    )
+    let fundsList = []
+    if (fundsAddresses) {
+      fundsList = await Promise.all(
+        fundsAddresses.map(fundAddress => {
+          return Drago.getFundDetails(fundAddress, networkId)
+        })
+      )
+    }
+
     this.setState({
       fundsList,
       fundsListDisabled: false

@@ -135,7 +135,6 @@ export const operateOnExchangeEFXUnlock = async (
   ])
   console.log(encodedABI)
   return contract.methods
-    //.operateOnExchange(exchangeContractAddress, encodedABI)
     .operateOnExchange(exchangeContractAddress, [encodedABI])
     .estimateGas(options)
     .then(gasEstimate => {
@@ -144,7 +143,6 @@ export const operateOnExchangeEFXUnlock = async (
     })
     .then(() => {
       return contract.methods
-        //.operateOnExchange(exchangeContractAddress, encodedABI)
         .operateOnExchange(exchangeContractAddress, [encodedABI])
         .send(options)
     })
@@ -242,15 +240,13 @@ export const operateOnExchangeEFXLock = async (
   const encodedABI = await web3.eth.abi.encodeFunctionCall(contractMethod, [
     tokenAddress,
     tokenWrapper,
-    toBeWrapped.toString(),
+    toBeWrapped.toString(16),
     time,
     isOldERC20
   ])
   const encodedTransaction = (exchangeContractAddress, [encodedABI])
   console.log(encodedTransaction)
-  //console.log(encodedABI)
   return contract.methods
-    //.operateOnExchange(exchangeContractAddress, encodedABI)
     .operateOnExchange(exchangeContractAddress, [encodedABI])
     .estimateGas(options)
     .then(gasEstimate => {
@@ -259,7 +255,6 @@ export const operateOnExchangeEFXLock = async (
     })
     .then(() => {
       return contract.methods
-        //.operateOnExchange(exchangeContractAddress, encodedABI)
         .operateOnExchange(exchangeContractAddress, [encodedABI])
         .send(options)
     })

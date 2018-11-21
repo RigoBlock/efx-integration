@@ -13,8 +13,8 @@ export const DRAGO_FACTORY_MAINNET_ADDRESS =
 export const DRAGO_REGISTRY_MAINNET_ADDRESS =
   '0xde6445484a8dcd9bf35fc95eb4e3990cc358822e'
 
-//export const EFX_EXCHANGE_ADDRESS = '0x1d8643aae25841322ecde826862a9fa922770981' // ROPSTEN
-export const EFX_EXCHANGE_ADDRESS = '0xdcdb42c9a256690bd153a7b409751adfc8dd5851' // MAINNET
+export const EFX_EXCHANGE_ADDRESS = '0x1d8643aae25841322ecde826862a9fa922770981' // ROPSTEN
+// export const EFX_EXCHANGE_ADDRESS = '0xdcdb42c9a256690bd153a7b409751adfc8dd5851' // MAINNET
 
 export const contracts = {
   1: {
@@ -33,24 +33,6 @@ export const contracts = {
 
 export const tokens = {
   1: {
-    ZRX: {
-      symbol: 'ZRX',
-      isOldERC20: false,
-      symbolTicker: {
-        Ethfinex: 'ZRX'
-      },
-      address: '0xe41d2489571d322189246dafa5ebde1f4699f498',
-      decimals: 18,
-      name: '0x Protocol Token',
-      wrappers: {
-        Ethfinex: {
-          symbol: 'ZRXW',
-          decimals: 18,
-          address: '0xCf67d7A481CEEca0a77f658991A00366FED558F7',
-          name: 'ZRX Wrapper'
-        }
-      }
-    },
     ETH: {
       symbol: 'ETH',
       isOldERC20: false,
@@ -64,7 +46,7 @@ export const tokens = {
         Ethfinex: {
           symbol: 'ETHW',
           decimals: 18,
-          address: '0xaA7427D8f17D87a28F5e1ba3aDBB270bAdbe1011',
+          address: '0xaA7427D8f17D87a28F5e1ba3aDBB270bAdbe1011'.toLowerCase(),
           name: 'ETH Wrapper'
         }
       }
@@ -82,7 +64,7 @@ export const tokens = {
         Ethfinex: {
           symbol: 'USDTW',
           decimals: 6,
-          address: '0x1a9B2d827F26B7d7C18fEC4c1B27c1E8dEeBa26e',
+          address: '0x1a9B2d827F26B7d7C18fEC4c1B27c1E8dEeBa26e'.toLowerCase(),
           name: 'USDT Wrapper'
         }
       }
