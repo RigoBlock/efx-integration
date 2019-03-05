@@ -240,7 +240,8 @@ export const operateOnExchangeEFXLock = async (
   const encodedABI = await web3.eth.abi.encodeFunctionCall(contractMethod, [
     tokenAddress,
     tokenWrapper,
-    toBeWrapped.toString(16),
+    //toBeWrapped.toString(16),
+    web3.utils.toWei(toBeWrapped.toString(), 'ether'),
     time,
     isOldERC20
   ])
