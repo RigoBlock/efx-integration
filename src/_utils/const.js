@@ -1,7 +1,7 @@
 export const DRAGO_FACTORY_KOVAN_ADDRESS =
-  '0x5b67f29f6d50f475d56ace03ce4b0d6a1287dc1f'
+  '0x29a6d8ca123a29dba7511931fca9a311f11a0b30'
 export const DRAGO_REGISTRY_KOVAN_ADDRESS =
-  '0x80673d1201c5e61e1efdd4e06bef015d1293ccee'
+  '0x220f59fb9211514a55cfde061e6d84cbbb89c6c1'
 
 export const DRAGO_FACTORY_ROPSTEN_ADDRESS =
   '0xe4c028a19dea70fb15d7d56c6e5779e363f685d0'
@@ -13,8 +13,9 @@ export const DRAGO_FACTORY_MAINNET_ADDRESS =
 export const DRAGO_REGISTRY_MAINNET_ADDRESS =
   '0xde6445484a8dcd9bf35fc95eb4e3990cc358822e'
 
-export const EFX_EXCHANGE_ADDRESS = '0x1d8643aae25841322ecde826862a9fa922770981' // ROPSTEN
+//export const EFX_EXCHANGE_ADDRESS = '0x1d8643aae25841322ecde826862a9fa922770981' // ROPSTEN
 // export const EFX_EXCHANGE_ADDRESS = '0xdcdb42c9a256690bd153a7b409751adfc8dd5851' // MAINNET
+ export const EFX_EXCHANGE_ADDRESS = '0x9faf5515f177F3A8a845D48C19032b33Cc54C09C' // KOVAN HOT WALLET
 
 export const contracts = {
   1: {
@@ -158,6 +159,44 @@ export const tokens = {
           decimals: 18,
           address: '0xacfb4c79259e3c2c1bf054f136e6d75f7cc2b07e',
           name: 'GRG Wrapper'
+        }
+      }
+    },
+    42: {
+      ETH: {
+        symbol: 'ETH',
+        isOldERC20: false,
+        symbolTicker: {
+          Ethfinex: 'ETH'
+        },
+        address: '0x0',
+        decimals: 18,
+        name: 'Ether',
+        wrappers: {
+          Ethfinex: {
+            symbol: 'ETHW',
+            decimals: 18,
+            address: '0x02fcb8a7D3Eae24dBd0Bc67Fdb5dE13E3ec7Cf93'.toLowerCase(),
+            name: 'ETH Wrapper'
+          }
+        }
+      },
+      USDT: {
+        symbol: 'USDT',
+        isOldERC20: true,
+        symbolTicker: {
+          Ethfinex: 'USD'
+        },
+        address: '0xD92EEe71478e115FCc5342fa44242e7896B8aF3b',
+        decimals: 6,
+        name: 'Tether USD',
+        wrappers: {
+          Ethfinex: {
+            symbol: 'USDTW',
+            decimals: 6,
+            address: '0xcC64620c47a9cD6Aa4a5265b48c85911DfB0005d'.toLowerCase(),
+            name: 'USDT Wrapper'
+          }
         }
       }
     }
