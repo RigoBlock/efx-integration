@@ -161,42 +161,60 @@ export const tokens = {
           name: 'GRG Wrapper'
         }
       }
-    },
-    42: {
-      ETH: {
-        symbol: 'ETH',
-        isOldERC20: false,
-        symbolTicker: {
-          Ethfinex: 'ETH'
-        },
-        address: '0x0',
-        decimals: 18,
-        name: 'Ether',
-        wrappers: {
-          Ethfinex: {
-            symbol: 'ETHW',
-            decimals: 18,
-            address: '0x02fcb8a7D3Eae24dBd0Bc67Fdb5dE13E3ec7Cf93'.toLowerCase(),
-            name: 'ETH Wrapper'
-          }
-        }
+    }
+  },
+  42: {
+    ETH: {
+      symbol: 'ETH',
+      isOldERC20: false,
+      symbolTicker: {
+        Ethfinex: 'ETH'
       },
-      USDT: {
-        symbol: 'USDT',
-        isOldERC20: true,
-        symbolTicker: {
-          Ethfinex: 'USD'
-        },
-        address: '0xD92EEe71478e115FCc5342fa44242e7896B8aF3b',
-        decimals: 6,
-        name: 'Tether USD',
-        wrappers: {
-          Ethfinex: {
-            symbol: 'USDTW',
-            decimals: 6,
-            address: '0xcC64620c47a9cD6Aa4a5265b48c85911DfB0005d'.toLowerCase(),
-            name: 'USDT Wrapper'
-          }
+      address: '0x0',
+      decimals: 18,
+      name: 'Ether',
+      wrappers: {
+        Ethfinex: {
+          symbol: 'ETHW',
+          decimals: 18,
+          address: '0x02fcb8a7D3Eae24dBd0Bc67Fdb5dE13E3ec7Cf93'.toLowerCase(),
+          name: 'ETH Wrapper'
+        }
+      }
+    },
+    USDT: {
+      symbol: 'USDT',
+      isOldERC20: true,
+      symbolTicker: {
+        Ethfinex: 'USD'
+      },
+      address: '0xD92EEe71478e115FCc5342fa44242e7896B8aF3b',
+      decimals: 6,
+      name: 'Tether USD',
+      wrappers: {
+        Ethfinex: {
+          symbol: 'USDTW',
+          decimals: 6,
+          address: '0xcC64620c47a9cD6Aa4a5265b48c85911DfB0005d'.toLowerCase(),
+          name: 'USDT Wrapper'
+        }
+      }
+    },
+    GRG: {
+      symbol: 'GRG',
+      isOldERC20: false,
+      symbolTicker: {
+        Ethfinex: 'GRG'
+      },
+      address: '0xF9d27b6ccba9cEF51934c90a33B7CA7885Adc5af',
+      decimals: 18,
+      name: 'GRG Token',
+      wrappers: {
+        Ethfinex: {
+          symbol: 'GRGW',
+          decimals: 18,
+          address: '0xF9d27b6ccba9cEF51934c90a33B7CA7885Adc5af',
+          name: 'GRG Wrapper'
         }
       }
     }
