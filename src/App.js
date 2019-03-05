@@ -31,7 +31,7 @@ class App extends Component {
     errorAddress: '',
     errorMsg: '',
     fundSelectEnabled: true,
-    networkId: 3,
+    networkId: 42,
     web3: {}
   }
 
@@ -86,7 +86,7 @@ class App extends Component {
     if (typeof window.web3 !== 'undefined') {
       const web3 = new Web3(window.web3.currentProvider)
       let networkId = await web3.eth.net.getId()
-      let errorMsg = networkId !== 3 ? 'Please connect to ropsten' : ''
+      let errorMsg = networkId !== 42 ? 'We are currently testing on Ropsten. Please switch network' : ''
 
       this.setState({
         web3,
