@@ -86,7 +86,7 @@ class App extends Component {
     if (typeof window.web3 !== 'undefined') {
       const web3 = new Web3(window.web3.currentProvider)
       let networkId = await web3.eth.net.getId()
-      let errorMsg = networkId !== 42 ? 'We are currently testing on Ropsten. Please switch network' : ''
+      let errorMsg = networkId !== 42 ? 'We are currently testing on Kovan. Please switch network' : ''
 
       this.setState({
         web3,
